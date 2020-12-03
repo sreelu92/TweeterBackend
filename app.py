@@ -540,7 +540,10 @@ def comments():
         conn=None
         cursor=None
         rows=None
-        
+        comment_id=request.json.get("commentId")
+        comment_logintoken=request.json.get("loginToken")
+
+
         try:
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
