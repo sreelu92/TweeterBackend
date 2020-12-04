@@ -666,13 +666,14 @@ def tweet_likes():
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
             if token:
-                cursor.execute("SELECT * FROM user_session WHERE login_token=?",[token])
-                tweetdata=cursor.fetchall()
-                for twee in tweetdata:
-                    twee[1]
-                cursor.execute("DELETE tweet_like FROM tweet_like WHERE user_id=? AND tweet_id=?",[twee[1],tweetid])
-                conn.commit()
-                rows=cursor.rowcount
+                cursor.execute("SELECT user_id FROM user_session WHERE login_token=?",[token])
+                userid=cursor.fetchone()
+                cursor.execute("SELECT user_id FROM tweet_like WHERE tweet_id=?",[tweetid])
+                newid=cursor.fetchone()
+                if(userid==newid):
+                    cursor.execute("DELETE tweet_like FROM tweet_like WHERE user_id=? AND tweet_id=?",[twee[1],tweetid])
+                    conn.commit()
+                    rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
             print("Something went wrong with coding ")
             print(error)
