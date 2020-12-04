@@ -671,7 +671,7 @@ def tweet_likes():
                 cursor.execute("SELECT user_id FROM tweet_like WHERE tweet_id=?",[tweetid])
                 newid=cursor.fetchone()
                 if(userid==newid):
-                    cursor.execute("DELETE tweet_like FROM tweet_like WHERE user_id=? AND tweet_id=?",[twee[1],tweetid])
+                    cursor.execute("DELETE tweet_like FROM tweet_like WHERE user_id=? AND tweet_id=?",userid,tweetid])
                     conn.commit()
                     rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
