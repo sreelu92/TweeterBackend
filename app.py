@@ -390,12 +390,12 @@ def tweets():
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
             if tweet_logintoken:
-                cursor.execute("SELECT user_id FROM user_session WHERE login_token=?",[tweet_logintoken])
+                cursor.execute("SELECT * FROM user_session WHERE login_token=?",[tweet_logintoken])
                 userids=cursor.fetchall()
                 for userid in userids:
                     userid[1]
 
-                cursor.execute("SELECT user_id FROM tweet WHERE tweet_id=?",[tweet_id])
+                cursor.execute("SELECT * FROM tweet WHERE tweet_id=?",[tweet_id])
                 newids=cursor.fetchall()
                 for newid in newids:
                     newid[3]
