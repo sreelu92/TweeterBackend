@@ -391,15 +391,10 @@ def tweets():
             cursor=conn.cursor()
             if tweet_logintoken:
                 cursor.execute("SELECT * FROM user_session WHERE login_token=?",[tweet_logintoken])
-                userids=cursor.fetchall()
-                for userid in userids:
-                    userid[1]
-
-                cursor.execute("SELECT * FROM tweet WHERE tweet_id=?",[tweet_id])
-                newids=cursor.fetchall()
-                for newid in newids:
-                    newid[3]
-                if(userid[1]==newid[3]):
+                users=cursor.fetchall()
+                for user in users:
+                    user[2]
+                if user[2]==tweet_logintoken:
                     cursor.execute("DELETE tweet FROM tweet WHERE id=?",[tweet_id,])
                     conn.commit()
                     rows=cursor.rowcount
