@@ -553,9 +553,14 @@ def comments():
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
             if comment_logintoken:
-                cursor.execute("DELETE comment FROM comment WHERE id=?",[comment_id,])
-                conn.commit()
-                rows=cursor.rowcount
+                cursor.execute("SELECT user_id FROM user_session WHERE login_token=?",[comment_logintoken])
+                userid=cursor.fetchone()
+                cursor.execute("SELECT user_id FROM tweet WHERE id=?",[comment_id])
+                newid=cursor.fetchone()
+                if(userid==newid):
+                    cursor.execute("DELETE comment FROM comment WHERE id=?",[comment_id,])
+                    conn.commit()
+                    rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
             print("Something went wrong with coding ")
             print(error)
