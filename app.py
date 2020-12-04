@@ -179,7 +179,7 @@ def users():
             if(conn!=None):
                 conn.rollback()
                 conn.close()
-            if(rows==2):
+            if(users!=None):
                 return Response("Delete success!",mimetype="text/html",status=204)
             else:
                 return Response("Delete failed",mimetype="text/html",status=500)
