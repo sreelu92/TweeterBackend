@@ -688,14 +688,9 @@ def tweet_likes():
                 tweetdata=cursor.fetchall()
                 for twee in tweetdata:
                     twee[1]
-                cursor.execute("SELECT * FROM tweet WHERE id=?",[tweetid])
-                users=cursor.fetchall()
-                for user in users:
-                    user[3]
-                if(twee[1]==user[3]):
-                    cursor.execute("DELETE tweet_like FROM tweet_like WHERE user_id=? AND tweet_id=?",[twee[1],tweetid])
-                    conn.commit()
-                    rows=cursor.rowcount
+                cursor.execute("DELETE tweet_like FROM tweet_like WHERE user_id=? AND tweet_id=?",[twee[1],tweetid])
+                conn.commit()
+                rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
             print("Something went wrong with coding ")
             print(error)
