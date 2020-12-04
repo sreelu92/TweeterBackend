@@ -390,14 +390,9 @@ def tweets():
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
             if tweet_logintoken:
-                cursor.execute("SELECT user_id FROM user_session WHERE login_token=?",[tweet_logintoken])
-                userid=cursor.fetchone()
-                cursor.execute("SELECT user_id FROM tweet WHERE id=?",[tweet_id])
-                tweeid=cursor.fetchone()
-                if (userid==tweeid):
-                    cursor.execute("DELETE tweet FROM tweet WHERE id=?",[tweet_id,])
-                    conn.commit()
-                    rows=cursor.rowcount
+                cursor.execute("DELETE tweet FROM tweet WHERE id=?",[tweet_id,])
+                conn.commit()
+                rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
             print("Something went wrong with coding ")
             print(error)
@@ -553,14 +548,9 @@ def comments():
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
             if comment_logintoken:
-                cursor.execute("SELECT user_id FROM user_session WHERE login_token=?",[comment_logintoken])
-                userid=cursor.fetchone()
-                cursor.execute("SELECT user_id FROM tweet WHERE id=?",[comment_id])
-                newid=cursor.fetchone()
-                if(userid==newid):
-                    cursor.execute("DELETE comment FROM comment WHERE id=?",[comment_id,])
-                    conn.commit()
-                    rows=cursor.rowcount
+                cursor.execute("DELETE comment FROM comment WHERE id=?",[comment_id,])
+                conn.commit()
+                rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
             print("Something went wrong with coding ")
             print(error)
@@ -666,14 +656,13 @@ def tweet_likes():
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
             if token:
-                cursor.execute("SELECT user_id FROM user_session WHERE login_token=?",[token])
-                userid=cursor.fetchone()
-                cursor.execute("SELECT user_id FROM tweet_like WHERE tweet_id=?",[tweetid])
-                newid=cursor.fetchone()
-                if(userid==newid):
-                    cursor.execute("DELETE tweet_like FROM tweet_like WHERE user_id=? AND tweet_id=?",userid,tweetid])
-                    conn.commit()
-                    rows=cursor.rowcount
+                cursor.execute("SELECT * FROM user_session WHERE login_token=?",[token])
+                tweetdata=cursor.fetchall()
+                for twee in tweetdata:
+                    twee[1]
+                cursor.execute("DELETE tweet_like FROM tweet_like WHERE user_id=? AND tweet_id=?",[twee[1],tweetid])
+                conn.commit()
+                rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
             print("Something went wrong with coding ")
             print(error)
