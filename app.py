@@ -390,9 +390,14 @@ def tweets():
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
             if tweet_logintoken:
-                cursor.execute("DELETE tweet FROM tweet WHERE id=?",[tweet_id,])
-                conn.commit()
-                rows=cursor.rowcount
+                cursor.execute("SELECT user_id FROM user_session WHERE login_token=?",[tweet_logintoken])
+                userid=cursor.fetchone()
+                cursor.execute("SELECT user_id FROM tweet WHERE id=?",[tweet_id])
+                tweeid=cursor.fetchone()
+                if (userid==tweeid):
+                    cursor.execute("DELETE tweet FROM tweet WHERE id=?",[tweet_id,])
+                    conn.commit()
+                    rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
             print("Something went wrong with coding ")
             print(error)
