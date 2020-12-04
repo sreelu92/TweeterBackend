@@ -157,9 +157,14 @@ def users():
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
             if tweet_logintoken:
-                cursor.execute("DELETE users,user_session FROM users INNER JOIN user_session ON users.id=user_session.user_id WHERE password=? AND login_token=?",[tweet_password,tweet_logintoken])
-                conn.commit()
-                rows=cursor.rowcount
+                cursor.execute("SELECT u.password FROM users u INNER JOIN user_session us ON u.id=us.user_id WHERE us.login_token=?",[tweet_logintoken])
+                users=cursor.fetchall()
+                for user in users:
+                    user[0]
+                if (user[0]==tweet_password):
+                    cursor.execute("DELETE users,user_session FROM users INNER JOIN user_session ON users.id=user_session.user_id WHERE password=? AND login_token=?",[tweet_password,tweet_logintoken])
+                    conn.commit()
+                    rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
             print("Something went wrong with coding ")
             print(error)
