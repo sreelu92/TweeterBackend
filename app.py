@@ -562,7 +562,7 @@ def comments():
                 for newid in newids:
                     newid[0]
                 if(user[1]==newid[0]):
-                    cursor.execute("DELETE comment FROM comment WHERE id=?",[comment_id,])
+                    cursor.execute("DELETE comment FROM comment WHERE id=",[comment_id,])
                     conn.commit()
                     rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
