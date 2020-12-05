@@ -108,16 +108,20 @@ def users():
             conn=mariadb.connect(user=dbcreds.user, password=dbcreds.password, host=dbcreds.host, port=dbcreds.port, database=dbcreds.database)
             cursor=conn.cursor()
             if tweet_logintoken:
+                cursor.execute("SELECT u.id FROM users u INNER JOIN user_session us ON u.id=us.user_id WHERE us.login_token=?",[tweet_logintoken])
+                users=cursor.fetchall()
+                for user in users:
+                    user[0]
                 if tweet_email!="" and tweet_email!=None:
-                    cursor.execute("UPDATE users INNER JOIN user_session ON users.id=user_session.user_id SET email=? WHERE login_Token=?",[tweet_email,tweet_logintoken])
+                    cursor.execute("UPDATE users u INNER JOIN user_session us ON u.id=us.user_id SET u.email=? WHERE us.login_Token=? AND u.id=?",[tweet_email,tweet_logintoken,user[0]])
                 if tweet_username!="" and tweet_username!=None:
-                    cursor.execute("UPDATE users INNER JOIN user_session ON users.id=user_session.user_id SET username=? WHERE login_Token=?",[tweet_username,tweet_logintoken])
+                    cursor.execute("UPDATE users u INNER JOIN user_session us ON u.id=us.user_id SET u.username=? WHERE us.login_Token=? AND u.id=?",[tweet_username,tweet_logintoken,user[0]])
                 if tweet_password!="" and tweet_password!=None:
-                    cursor.execute("UPDATE users INNER JOIN user_session ON users.id=user_session.user_id SET password=? WHERE login_Token=?",[tweet_password,tweet_logintoken])
+                    cursor.execute("UPDATE users u INNER JOIN user_session us ON u.id=us.user_id SET u.password=? WHERE us.login_Token=? AND u.id=?",[tweet_password,tweet_logintoken,user[0]])
                 if tweet_bio!="" and tweet_bio!=None:
-                    cursor.execute("UPDATE users INNER JOIN user_session ON users.id=user_session.user_id SET bio=? WHERE login_Token=?",[tweet_bio,tweet_logintoken])
+                    cursor.execute("UPDATE users u INNER JOIN user_session us ON u.id=us.user_id SET u.bio=? WHERE us.login_Token=? AND u.id=?",[tweet_bio,tweet_logintoken,user[0]])
                 if tweet_birthdate!="" and tweet_birthdate!=None:
-                    cursor.execute("UPDATE users INNER JOIN user_session ON users.id=user_session.user_id SET birthday=? WHERE login_Token=?",[tweet_birthdate,tweet_logintoken])
+                    cursor.execute("UPDATE users u INNER JOIN user_session us ON u.id=us.user_id SET u.birthday=? WHERE us.login_Token=? AND u.id=?",[tweet_birthdate,tweet_logintoken,user[0]])
 
                 conn.commit()
                 rows=cursor.rowcount
