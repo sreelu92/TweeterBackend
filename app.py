@@ -370,7 +370,7 @@ def tweets():
             cursor=conn.cursor()
             if tweet_logintoken:
                 if tweet_content!="" and tweet_content!=None:
-                    cursor.execute("UPDATE tweet SET content=? WHERE id=?",[tweet_content,tweet_id])
+                    cursor.execute("UPDATE tweet t INNER JOIN user_session us ON t.user_id=us.user_id SET t.content=? WHERE t.id=? AND us.login_token=?",[tweet_content,tweet_id,tweet_logintoken])
             conn.commit()
             rows=cursor.rowcount
         except mariadb.ProgrammingError as error:
@@ -531,7 +531,7 @@ def comments():
             cursor=conn.cursor()
             if comment_logintoken:
                 if comment_content!="" and comment_content!=None:
-                    cursor.execute("UPDATE comment SET content=? WHERE id=?",[comment_content,comment_id])
+                    cursor.execute("UPDATE comment c INNER JOIN user_session us ON c.user_id=us.user_id SET c.content=? WHERE c.id=? AND us.login_token=?",[comment_content,comment_id,comment_logintoken])
                     conn.commit()
                     rows=cursor.rowcount
                     cursor.execute("SELECT c.user_id,c.tweet_id,c.id,c.content,c.created_at,u.username FROM comment c INNER JOIN users u ON u.id=c.user_id WHERE c.id=?",[comment_id])
